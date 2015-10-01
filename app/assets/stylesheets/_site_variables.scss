@@ -1,0 +1,19 @@
+$clarity-theme-dark:   #49708A;
+$clarity-theme-medium:  #88abc2;
+$clarity-theme-light:  #d0e0eb;
+$clarity-theme-lighter:  #ebf7fb;
+$clarity-theme-accent: #5fe545;
+
+
+$brand-primary: $clarity-theme-dark;
+/*$brand-danger: yellow;*/
+$border-radius-base: 10px;
+$font-family-sans-serif: "Verdana";
+// $navbar-padding-vertical: 5px;
+$navbar-default-bg: $clarity-theme-medium; 
+$navbar-border-radius: 0px;
+$navbar-default-link-color: $clarity-theme-accent;
+$well-bg : $clarity-theme-lighter;
+$code-bg : $clarity-theme-lighter;
+$list-group-hover-bg : $clarity-theme-dark;
+$list-group-link-hover-color : $clarity-theme-accent;

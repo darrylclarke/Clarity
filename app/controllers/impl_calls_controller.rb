@@ -1,0 +1,2 @@
+class ImplCallsController < ApplicationController
+end

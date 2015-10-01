@@ -1,0 +1,35 @@
+<h1 class="clarity-h1"><%= image_tag "f_class2.png", size: "32", class: "element-icon" %> Class:  <%= @code_class.name %></h1>
+<!--<p id="notice"><%= notice %></p>-->
+<div class="clarity-detail-box">
+<p>
+  <strong>Ancestors:</strong>
+  <%= @code_class.ancestors %>
+</p>
+
+<p>
+  <strong>Code file:</strong>
+  <%= @code_class.code_file.path %>
+</p>
+
+<p>
+  <strong>Line:</strong>
+  <%= @code_class.line %>
+</p>
+</div>
+
+<h2 class="clarity-h2">Data Members:</h2>
+<ul>
+<% @code_class.variables.each do |v| %>
+    <li><%= v.name %></li>
+<% end %>
+</ul>
+
+<h2 class="clarity-h2">Methods:</h2>
+<ul>
+<% @code_class.code_methods.each do |m| %>
+    <%= m.decorate.list_item %>
+<% end %>
+</ul>
+
+<!--<%#= link_to 'Edit', edit_code_class_path(@code_class) %> |
+<%#= link_to 'Back', code_classes_path %>-->

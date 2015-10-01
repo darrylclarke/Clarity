@@ -1,0 +1,31 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Listing Code Files</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Path</th>
+      <th>Project</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @code_files.each do |code_file| %>
+      <tr>
+        <td><%= code_file.name %></td>
+        <td><%= code_file.path %></td>
+        <td><%= code_file.project %></td>
+        <td><%= link_to 'Show', code_file %></td>
+        <td><%= link_to 'Edit', edit_code_file_path(code_file) %></td>
+        <td><%= link_to 'Destroy', code_file, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Code file', new_code_file_path %>

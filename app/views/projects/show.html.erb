@@ -1,0 +1,18 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Project:  <%= @project.name %></h1>
+
+<p>
+  <strong>Root path:</strong>
+  <%= @project.root_path %>
+</p>
+
+<h2>Files:</h2>
+<ul>
+<% @project.code_files.each do |file| %>
+    <%= file.decorate.list_item %>
+<% end %>
+</ul>
+
+<%= link_to 'Edit', edit_project_path(@project) %> |
+<%= link_to 'Back', projects_path %>

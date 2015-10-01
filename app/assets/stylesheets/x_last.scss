@@ -1,0 +1,38 @@
+code a {
+  color: #0f0;
+
+  &:visited {
+    color: #f00;
+  }
+
+  &:hover {
+    color: #00f;
+    background-color: #000;
+  }
+}
+
+code a.clarity-link-class {
+  color: #0fF;
+
+  &:visited {
+    color: #0fF;
+  }
+
+  &:hover {
+    color: #AAA;
+    background-color: #Fc7;
+  }
+}
+
+code a.clarity-link-method {
+  color: #07f;
+
+  &:visited {
+    color: #07f;
+  }
+
+  &:hover {
+    color: #AAA;
+    background-color: #Fc7;
+  }
+}

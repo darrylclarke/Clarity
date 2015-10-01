@@ -1,0 +1,39 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Listing Code Methods</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Arguments</th>
+      <th>Code file</th>
+      <th>Code class</th>
+      <th>Impl start</th>
+      <th>Impl end</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @code_methods.each do |code_method| %>
+      <tr>
+        <td><%= code_method.name %></td>
+        <td><%= code_method.return_type %></td>
+        <td><%= code_method.arguments %></td>
+        <td><%= code_method.code_file %></td>
+        <td><%= code_method.code_class %></td>
+        <td><%= code_method.impl_start %></td>
+        <td><%= code_method.impl_end %></td>
+        <td><%= link_to 'Show', code_method %></td>
+        <td><%= link_to 'Edit', edit_code_method_path(code_method) %></td>
+        <td><%= link_to 'Destroy', code_method, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Code method', new_code_method_path %>

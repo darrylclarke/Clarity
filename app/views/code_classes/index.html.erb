@@ -1,0 +1,33 @@
+<p id="notice"><%= notice %></p>
+
+<h1>All Classes</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Ancestors</th>
+      <th>Code file</th>
+      <th>Line</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @code_classes.each do |code_class| %>
+      <tr>
+        <td><%= code_class.name %></td>
+        <td><%= code_class.ancestors %></td>
+        <td><%= code_class.code_file %></td>
+        <td><%= code_class.line %></td>
+        <td><%= link_to 'Show', code_class %></td>
+        <td><%= link_to 'Edit', edit_code_class_path(code_class) %></td>
+        <td><%= link_to 'Destroy', code_class, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Code class', new_code_class_path %>

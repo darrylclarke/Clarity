@@ -1,0 +1,16 @@
+<p id="notice"><%= notice %></p>
+
+<h1>File:  <%= @code_file.name %></h1>
+
+<p>
+  <strong>Path:</strong>
+  <%= @code_file.path %>
+</p>
+
+<p>
+  <strong>Project:</strong>
+  <%= @code_file.project.name %>
+</p>
+
+<%#= link_to 'Edit', edit_code_file_path(@code_file) %> |
+<%#= link_to 'Back', code_files_path %>

@@ -1,0 +1,49 @@
+<!--<p id="notice"><%= notice %></p>-->
+
+<h1 class="clarity-h1"><%= image_tag "f_method_icon.png", class: "element-icon" %> Method: <%= @code_method.name %></h1>
+<div class="clarity-detail-box">
+  <p>
+    <strong>Return Type:</strong>
+    <%= @code_method.return_type %>
+  </p>
+  
+  <p>
+    <strong>Arguments:</strong>
+    <%= @code_method.arguments %>
+  </p>
+  
+  <p>
+    <strong>Code class:</strong>
+    <%= @code_method.code_class %>
+  </p>
+  
+  <p>
+    <strong>File:</strong>
+    <%= @code_method.code_file.name %>
+    Lines <%= @code_method.impl_start %> to <%= @code_method.impl_end %>
+  </p>
+</div>
+
+<h2 class="clarity-h2">Implementation:</h2>
+<pre>
+  <code>
+std::unique_ptr&lt;EmulatorWindow&gt; <%= link_to "EmulatorWindow", code_class_path(@code_method.code_class), class: "clarity-link clarity-link-class" %>::Create(Emulator* emulator) {
+  std::unique_ptr&lt;EmulatorWindow&gt; emulator_window(new EmulatorWindow(emulator));
+
+  emulator_window->loop()-><%= link_to "PostSynchronous", code_method_path(12075), class: "clarity-link clarity-link-method" %>[&emulator_window]() {
+    xe::threading::set_name("Win32 Loop");
+    xe::Profiler::ThreadEnter("Win32 Loop");
+
+    if (!emulator_window->Initialize()) {
+      xe::FatalError("Failed to initialize main window");
+      return;
+    }
+  });
+
+  return emulator_window;
+}
+  </code>
+</pre>
+
+<!--<%#= link_to 'Edit', edit_code_method_path(@code_method) %> |
+<%#= link_to 'Back', code_methods_path %>-->
