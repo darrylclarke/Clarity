@@ -122,3 +122,24 @@ class DetailsMethodFinder < DetailsTreeTraverser
 		puts "count = #{@list.count}."
 	end
 end
+
+class DetailsFolderFinder < DetailsTreeTraverser
+	def initialize
+		@count = 0
+		@list = []
+	end
+	attr_accessor :count, :list
+	
+	def do_file_action( cell )
+		if cell.class == DirectoryCell
+			# puts "#{cell.summary}"
+			@list << cell
+		end
+	end
+	
+	def pprint
+		@list.sort! {|x,y| x.bare_file_name <=> y.bare_file_name }
+		@list.each { |x| puts x.bare_file_name }
+		puts "count = #{@list.count}."
+	end
+end

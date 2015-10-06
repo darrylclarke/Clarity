@@ -15,7 +15,7 @@ class FileCellFactory
 	#
 	def self.create( fragment_name, file_name )
 		if File.ftype( file_name ) == 'directory'
-			puts ">> directory #{file_name}" if DEBUG
+			puts ">> directory #{file_name}" if DEBUG&&false
 			return DirectoryCell.new( file_name ) if fragment_name[0] != '.'
 			return nil
 		elsif File.executable?( file_name )

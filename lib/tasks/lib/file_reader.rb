@@ -72,6 +72,11 @@ class FileReader
 		@lines
 	end
 
+		def get_lines_a_to_b( file_name, line_a, line_b )
+		@data_source = File.open( file_name, "r" )
+		initial_load_a_b( line_a, line_b )
+	end
+	
 	def print_to_console
 		@lines.each { |l| puts "#{l.line.r_just} |#{l.text}| (#{l.text.length})" }
 	end
@@ -88,6 +93,20 @@ private
 			if line.length > 0
 				@lines << Line.new(line_number, line)
 			end
+		end
+		f.close if f.is_a? File
+		@lines
+	end
+	
+	def initial_load_a_b( line_a, line_b )
+		@lines = []
+		line_number = 0
+		f = @data_source
+		f.each do |line|
+			line_number += 1
+			next unless line_number >= line_a
+			@lines << Line.new(line_number, line.chomp )
+			break if line_number >= line_b
 		end
 		f.close if f.is_a? File
 		@lines

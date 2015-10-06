@@ -12,7 +12,6 @@ class FileScopeCell < Cell
 	attr_accessor :text_lines, :body_lines, :line, :name
 
 	def add_child( c )
-	byebug if !c
 		@children << c
 		c
 	end

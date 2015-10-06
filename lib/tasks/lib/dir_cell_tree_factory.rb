@@ -28,6 +28,8 @@ private
 		puts "processing #{dir_name}" if VERBOSE
 		# Dir.chdir( dir_name )
 		# puts "cd #{dir_name}"
+		local_count = 0
+		
 		Dir.foreach( '.' ) do |fragment_name|
 			full_name = dir_name + '/' + fragment_name
 			puts "** #{full_name}" if VERBOSE
@@ -36,6 +38,8 @@ private
 			if !c
 				next  # Don't process things that aren't valid subdirectories or files
 			end
+			local_count += 1 if c.is_a? FileCell
+			c.parent = cell
 			cell.children << c
 			
 			if c.instance_of? DirectoryCell
@@ -44,5 +48,6 @@ private
 				Dir.chdir("..");
 			end
 		end
+		cell.num_code_files = local_count
 	end
 end	

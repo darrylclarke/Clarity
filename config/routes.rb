@@ -1,14 +1,21 @@
 Rails.application.routes.draw do
-  resources :impl_calls
-  resources :preprocessor_lines
-  resources :variables
+  resources :folders, only: [:show]
+  
+  # resources :impl_calls
+  # resources :preprocessor_lines
+  # resources :variables
   resources :code_methods
-  resources :structures
+  # resources :structures
   resources :code_classes, path: "classes"
   resources :code_files
-  resources :projects
+  
+  resources :projects do
+    resources :display_boxes, only: [:index]
+    resources :display_box_links, only: [:index]
+  end
+  
   resources :users
   
-  root "welcome#index"
+  root "projects#index"
   
 end

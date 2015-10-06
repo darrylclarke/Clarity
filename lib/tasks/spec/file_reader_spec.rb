@@ -73,4 +73,24 @@ RSpec.describe FileReader do
 			expect( @line.find_multiple("*\#()YYESE&") ).to eq([nil,nil])
 		end
 	end
+	
+	describe 'get lines a-->b' do
+		let(:f)     { f = FileReader.new }
+		let(:lines) { lines = f.get_lines_a_to_b(__FILE__, 1, 2 ) }
+		
+		it "reads the first two lines of this file" do
+			expect( lines.length ).to eq(2)
+		end
+		
+		it "reads the text of the first line OK" do
+			expect( lines[0].line ).to eq(1)
+			expect( lines[0].text ).to eq("# in spec/calculator_spec.rb")
+		end
+		
+		it "reads the text of the second line OK" do
+			expect( lines[1].line ).to eq(2)
+			expect( lines[1].text ).to eq("# require \"file_reader\"")
+		end
+		
+	end	
 end

@@ -1,18 +1,39 @@
-<p id="notice"><%= notice %></p>
 
-<h1>Project:  <%= @project.name %></h1>
-
+<h1 class="clarity-h1"><%#= image_tag "f_method_icon.png", class: "element-icon" %> Project: <%= @project.name %></h1>
+<div class="clarity-detail-box">
 <p>
   <strong>Root path:</strong>
   <%= @project.root_path %>
 </p>
+</div>
 
-<h2>Files:</h2>
-<ul>
-<% @project.code_files.each do |file| %>
-    <%= file.decorate.list_item %>
-<% end %>
-</ul>
+<p id="notice"><%= notice %></p>
 
-<%= link_to 'Edit', edit_project_path(@project) %> |
-<%= link_to 'Back', projects_path %>
+<div style="float:left;">
+<h2>Folders:</h2>
+</div>
+<div style="float: right;">
+<%= link_to 'Back', projects_path, class: "btn btn-info" %>
+</div>
+<!--<ul>
+<%# @project.code_files.each do |file| %>
+    <%#= file.decorate.list_item %>
+<%# end %>
+</ul>-->
+
+<script>
+$(document).ready(function(){
+	$.ajax({
+	method:  	"GET",
+	url:		"http://localhost:3000//projects/" + <%=@project.id%> + "/display_boxes.json",
+	success:	loadTree
+	});
+});
+
+</script>
+
+<canvas id="myCanvas" width="1400" height="800" style="border:1px solid #c3c3c3;">
+Your browser does not support the HTML5 canvas tag.
+</canvas>
+
+

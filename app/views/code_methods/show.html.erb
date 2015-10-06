@@ -25,23 +25,14 @@
 </div>
 
 <h2 class="clarity-h2">Implementation:</h2>
+<pre><code><%= get_code_for_method( @code_method ) %></code></pre>
+<br>
 <pre>
   <code>
 std::unique_ptr&lt;EmulatorWindow&gt; <%= link_to "EmulatorWindow", code_class_path(@code_method.code_class), class: "clarity-link clarity-link-class" %>::Create(Emulator* emulator) {
   std::unique_ptr&lt;EmulatorWindow&gt; emulator_window(new EmulatorWindow(emulator));
 
   emulator_window->loop()-><%= link_to "PostSynchronous", code_method_path(12075), class: "clarity-link clarity-link-method" %>[&emulator_window]() {
-    xe::threading::set_name("Win32 Loop");
-    xe::Profiler::ThreadEnter("Win32 Loop");
-
-    if (!emulator_window->Initialize()) {
-      xe::FatalError("Failed to initialize main window");
-      return;
-    }
-  });
-
-  return emulator_window;
-}
   </code>
 </pre>
 

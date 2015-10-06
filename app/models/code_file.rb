@@ -1,8 +1,9 @@
 class CodeFile < ActiveRecord::Base
   belongs_to :project
-  has_many   :code_methods
-  has_many   :variables
-  has_many   :code_classes
+  belongs_to :folder
+  has_many   :code_methods, dependent: :destroy
+  has_many   :variables, dependent: :destroy
+  has_many   :code_classes, dependent: :destroy
   
   validates :name, presence: true
   validates :path, presence: true

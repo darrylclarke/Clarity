@@ -1,0 +1,2 @@
+module DisplayBoxLinksHelper
+end
