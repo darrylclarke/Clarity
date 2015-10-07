@@ -1,5 +1,6 @@
 class Folder < ActiveRecord::Base
-
+  belongs_to :projects
+  
   has_many :sub_folders, dependent: :destroy, foreign_key: "parent_id"
   has_many :children, through: :sub_folders,  source: :folder
   
@@ -9,4 +10,9 @@ class Folder < ActiveRecord::Base
   	
   has_many :code_files,  dependent: :nullify
   has_one  :display_box, dependent: :nullify
+  
+  
+  def contained_files_alphabetically 
+    code_files.order(:name)
+  end
 end

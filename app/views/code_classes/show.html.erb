@@ -8,7 +8,13 @@
 
 <p>
   <strong>Code file:</strong>
-  <%= @code_class.code_file.path %>
+  <%= link_to @code_class.code_file.path, code_file_path(@code_class.code_file) %>
+  <%= link_to "Show", code_file_path(@code_class.code_file), class: "btn btn-info btn-xs" %>
+</p>
+
+<p>
+  <strong>Namespace:</strong>
+  <%= @code_class.code_namespace.name %>
 </p>
 
 <p>

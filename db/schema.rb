@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151006154022) do
+ActiveRecord::Schema.define(version: 20151007165422) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -21,11 +21,15 @@ ActiveRecord::Schema.define(version: 20151006154022) do
     t.string   "ancestors"
     t.integer  "code_file_id"
     t.integer  "line"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
+    t.integer  "code_namespace_id"
+    t.integer  "project_id"
   end
 
   add_index "code_classes", ["code_file_id"], name: "index_code_classes_on_code_file_id", using: :btree
+  add_index "code_classes", ["code_namespace_id"], name: "index_code_classes_on_code_namespace_id", using: :btree
+  add_index "code_classes", ["project_id"], name: "index_code_classes_on_project_id", using: :btree
 
   create_table "code_files", force: :cascade do |t|
     t.string   "name"
@@ -51,10 +55,23 @@ ActiveRecord::Schema.define(version: 20151006154022) do
     t.datetime "updated_at",           null: false
     t.string   "specified_class_name"
     t.integer  "signature_line"
+    t.integer  "code_namespace_id"
+    t.integer  "project_id"
   end
 
   add_index "code_methods", ["code_class_id"], name: "index_code_methods_on_code_class_id", using: :btree
   add_index "code_methods", ["code_file_id"], name: "index_code_methods_on_code_file_id", using: :btree
+  add_index "code_methods", ["code_namespace_id"], name: "index_code_methods_on_code_namespace_id", using: :btree
+  add_index "code_methods", ["project_id"], name: "index_code_methods_on_project_id", using: :btree
+
+  create_table "code_namespaces", force: :cascade do |t|
+    t.string   "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer  "project_id"
+  end
+
+  add_index "code_namespaces", ["project_id"], name: "index_code_namespaces_on_project_id", using: :btree
 
   create_table "display_box_lines", force: :cascade do |t|
     t.integer  "display_box_id"
@@ -176,18 +193,27 @@ ActiveRecord::Schema.define(version: 20151006154022) do
     t.integer  "code_file_id"
     t.integer  "code_class_id"
     t.integer  "line"
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
+    t.integer  "code_namespace_id"
+    t.integer  "project_id"
   end
 
   add_index "variables", ["code_class_id"], name: "index_variables_on_code_class_id", using: :btree
   add_index "variables", ["code_file_id"], name: "index_variables_on_code_file_id", using: :btree
+  add_index "variables", ["code_namespace_id"], name: "index_variables_on_code_namespace_id", using: :btree
+  add_index "variables", ["project_id"], name: "index_variables_on_project_id", using: :btree
 
   add_foreign_key "code_classes", "code_files"
+  add_foreign_key "code_classes", "code_namespaces"
+  add_foreign_key "code_classes", "projects"
   add_foreign_key "code_files", "folders"
   add_foreign_key "code_files", "projects"
   add_foreign_key "code_methods", "code_classes"
   add_foreign_key "code_methods", "code_files"
+  add_foreign_key "code_methods", "code_namespaces"
+  add_foreign_key "code_methods", "projects"
+  add_foreign_key "code_namespaces", "projects"
   add_foreign_key "display_box_lines", "display_boxes"
   add_foreign_key "display_boxes", "folders"
   add_foreign_key "folders", "projects"
@@ -199,4 +225,6 @@ ActiveRecord::Schema.define(version: 20151006154022) do
   add_foreign_key "user_projects", "users"
   add_foreign_key "variables", "code_classes"
   add_foreign_key "variables", "code_files"
+  add_foreign_key "variables", "code_namespaces"
+  add_foreign_key "variables", "projects"
 end

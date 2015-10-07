@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :code_namespaces, only: [:show, :index]
   resources :folders, only: [:show]
   
   # resources :impl_calls

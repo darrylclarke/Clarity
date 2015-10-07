@@ -13,8 +13,10 @@
   </p>
   
   <p>
-    <strong>Code class:</strong>
-    <%= @code_method.code_class %>
+    <% if @code_method.code_class %>
+      <strong>Code class:</strong>
+      <%= link_to @code_method.code_class.name, code_class_path( @code_method.code_class)  %>
+    <% end %>
   </p>
   
   <p>
@@ -29,9 +31,11 @@
 <br>
 <pre>
   <code>
+   <% if @code_method.code_class %>
+
 std::unique_ptr&lt;EmulatorWindow&gt; <%= link_to "EmulatorWindow", code_class_path(@code_method.code_class), class: "clarity-link clarity-link-class" %>::Create(Emulator* emulator) {
   std::unique_ptr&lt;EmulatorWindow&gt; emulator_window(new EmulatorWindow(emulator));
-
+<% end %>
   emulator_window->loop()-><%= link_to "PostSynchronous", code_method_path(12075), class: "clarity-link clarity-link-method" %>[&emulator_window]() {
   </code>
 </pre>

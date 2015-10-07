@@ -136,6 +136,14 @@ class FileCell < FileCellBase
 		super
 		puts summary
 	end
+	
+	def is_c_plus_plus
+	  file_name.end_with?( ".h" ) 
+		|| file_name.end_with?( ".cc" ) 
+		|| file_name.end_with?( ".cpp" ) 
+		|| file_name.end_with?( ".C" )
+		|| file_name.end_with?( ".c" )
+	end
 end
 
 ########################################################################

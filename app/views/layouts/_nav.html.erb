@@ -6,8 +6,13 @@
         <span><%= image_tag "f_home_icon64.png", size: "32" %></span>
         <!--<span style=>Clarity</span>-->
       </a></li>
+        <% if !current_project_id %>
         <li><%= link_to "Projects", projects_path %></li>
-        <li><%= link_to "All Classes", code_classes_path %></li>
+        <% else %>
+        <li><span class="label label-success">Project:  <%= current_project_name %></span></li>
+        <li><%= link_to "All Classes", code_classes_path, id: "all-classes-link" %></li>
+        <li><%= link_to "All Namespaces", code_namespaces_path %></li>
+        <% end %>
       </ul>
     </div>
     <ul class="nav navbar-nav navbar-right">

@@ -1,18 +1,40 @@
-<h1 class="clarity-h1"><span class="big-icon show-folder-heading-icon"><%= fa_icon("folder-open")%></span> Folder:  <%= @folder.name %></h1>
+<h1 class="clarity-h1"><span class="big-icon show-folder-heading-icon"><%= fa_icon("folder-open")%></span>
+Folder:  <%= @folder.name %></h1>
 <!--<p id="notice"><%= notice %></p>-->
 <div class="clarity-detail-box">
 <p>
-  <strong>ddddddd:</strong>
-  <%#= @code_class.ancestors %>
+  <strong>Full Path:</strong>
+  <%= @folder.path %>
+</p>
+<p>
+  <strong>Project:</strong>
+  <%= @project.name %>
 </p>
 
 <p>
-  <strong>dddddd:</strong>
-  <%#= @code_class.line %>
+  <strong>Number of code files:</strong>
+  <%= @folder.num_code_files %>
 </p>
 </div>
 
-<p>
-  <strong>Code files:</strong>
-  <%#= @code_class.code_file.path %>
-</p>
+<h2 class="clarity-h2">Code files:</h2>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Path</th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @folder.contained_files_alphabetically.each do |code_file| %>
+      <tr>
+        <td><%= link_to code_file.name, code_file_path(code_file) %></td>
+        <td><%= link_to code_file.path, code_file_path(code_file) %></td>
+        <td><%= link_to 'Show', code_file_path(code_file), class: "btn btn-info btn-xs" %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

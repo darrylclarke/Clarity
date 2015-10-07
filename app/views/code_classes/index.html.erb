@@ -1,33 +1,43 @@
-<p id="notice"><%= notice %></p>
-
-<h1>All Classes</h1>
-
-<table>
+<h1 class="clarity-h1">
+  <%= fa_icon( "object-group" )%> All Classes</h1>
+<!--<div class="clarity-detail-box"></div>-->
+<!--<p id="notice"><%= notice %></p>-->
+ 
+<%= form_for CodeClass.new, html: {id: "classes-index-namespace-search-form", class: "form-horizontal"} do |f| %>
+<div class="clarity-detail-box row">
+    <div class="col-md-8">
+			<%= f.label "Filter by namespace:", style: "margin-top:6px;" %>
+			<%= f.collection_select :code_namespace_id, CodeNamespace.all, :id, :name, {include_blank: true}, style: "margin-bottom:10px;", class: "form-control" %> 
+    </div>
+    <div class="col-md-4">	
+		  <%= f.submit "Filter", class: "btn btn-primary"		 %>
+      <button id="filter-by-namespace-reset" class="btn btn-primary">Reset</button>
+		</div>
+</div>
+<% end %>    
+ 
+<table class="table table-striped">
   <thead>
     <tr>
       <th>Name</th>
+      <th>Project</th>
       <th>Ancestors</th>
       <th>Code file</th>
-      <th>Line</th>
-      <th colspan="3"></th>
+      <th>Namespace</th>
+      <th></th>
     </tr>
   </thead>
 
   <tbody>
     <% @code_classes.each do |code_class| %>
       <tr>
-        <td><%= code_class.name %></td>
+        <td><%= link_to code_class.name, code_class %></td>
+        <td><%= code_class.code_file.project.name %></td>
         <td><%= code_class.ancestors %></td>
-        <td><%= code_class.code_file %></td>
-        <td><%= code_class.line %></td>
-        <td><%= link_to 'Show', code_class %></td>
-        <td><%= link_to 'Edit', edit_code_class_path(code_class) %></td>
-        <td><%= link_to 'Destroy', code_class, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= code_class.code_file.name %></td>
+        <td><%= code_class.code_namespace.name %></td>
+        <td><%= link_to 'Show', code_class_path(code_class), class: "btn btn-info btn-xs" %></td>
       </tr>
     <% end %>
   </tbody>
 </table>
-
-<br>
-
-<%= link_to 'New Code class', new_code_class_path %>

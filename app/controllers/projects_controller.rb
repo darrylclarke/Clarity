@@ -11,6 +11,7 @@ class ProjectsController < ApplicationController
   # GET /projects/1.json
   def show
     @project = Project.find params[:id]
+    set_current_project( @project )
   end
 
   # GET /projects/new

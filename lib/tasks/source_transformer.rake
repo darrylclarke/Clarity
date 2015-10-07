@@ -24,14 +24,6 @@ def create_folders( input_cell, folders_cache, project )
 end
 
 def do_work( c, project )
-    if CLEAN
-      SubFolder.destroy_all
-      Folder.destroy_all
-      DisplayBoxLine.destroy_all
-      DisplayBox.destroy_all
-      DisplayBoxLink.destroy_all
-    end
-    
     folders_cache={}    
     create_folders( c, folders_cache, project )
 
@@ -87,34 +79,86 @@ end
   
   desc "This task generates the data model for a C++ project"
   task generate_cpp: :environment do
+    args = ENV['project']
+    if ENV['clean'] =~ /^all/
+      clean_project( :all )
+    else
+      main_process( args )
+    end
+  end #task do
+
+NAMESPACE_NAME_FOR_NO_NAMESPACE = "(none)"
+
+def clean_project( project_name )
+      SubFolder.destroy_all
+      Folder.destroy_all
+      DisplayBoxLine.destroy_all
+      DisplayBox.destroy_all
+      DisplayBoxLink.destroy_all
+      Variable.destroy_all
+      CodeMethod.destroy_all
+      CodeClass.destroy_all
+      CodeFile.destroy_all
+      Project.destroy_all
+      CodeNamespace.destroy_all
+end
+
+def get_namespace_from_cache( namespaces_cache, namespace_name )
+  namespace_name.strip!
+  if namespace_name.length == 0
+    namespace_name = NAMESPACE_NAME_FOR_NO_NAMESPACE
+  end
+  namespaces_cache[ namespace_name ]
+end
+
+def gather_namespaces( base_cell, project )
+  all_namespaces = []
+  namespace_worker( base_cell, all_namespaces )
+  all_namespaces.sort!
+  namespaces_cache = {}
+  
+  # capture the 'no namespace option'
+  namespaces_cache[ NAMESPACE_NAME_FOR_NO_NAMESPACE ] = CodeNamespace.create( 
+    name: NAMESPACE_NAME_FOR_NO_NAMESPACE, project: project )
+  
+  all_namespaces.each do |ns|
+    ns = ns.strip
+    next if ns.length == 0 # This captured above...
+    namespaces_cache[ ns ] = CodeNamespace.create( name: ns, project: project )
+  end
+  namespaces_cache
+end
+
+def namespace_worker( cell, all_namespaces )
+  if cell.is_a? ClassCell
+    if !(all_namespaces.include? cell.namespace )
+      all_namespaces << cell.namespace
+    end
+  end
+  
+  cell.children.each do |child|
+    namespace_worker( child, all_namespaces )
+  end
+end
     
-    FOLDER = "/Users/darrylclarke/prj/source/code_small"
-    FOLDER_BIGG = "/Users/darrylclarke/prj/source/xenia/src/xenia"
-    FOLDER_BIG = "/Users/darrylclarke/prj/source/xenia/src/xenia/app"
-    input = FOLDER
-    
+def main_process( input )   
     c = DirCellTreeFactory.create( input )
     CellPrinter.output c
-    #CellPrinter.process
-    
-    # byebug
+
     
     name = input.split('/').last
     project = Project.find_by_name( name )
     project ||= Project.create( name: name, root_path: input )
     
+    namespaces_cache = gather_namespaces( c, project )
     # byebug
+    
     folders_cache = do_work( c, project )
     
     if true
     classes_cache = {}
     
-    if CLEAN
-      Variable.destroy_all
-      CodeMethod.destroy_all
-      CodeClass.destroy_all
-      CodeFile.destroy_all
-    end
+
     
     q = DetailsFileFinder.new 
     q.set_tree( c )
@@ -143,10 +187,12 @@ end
         if code_cell.class == VariableCell
             puts "Doing #{code_cell.class}."
             puts code_cell.name
-            Variable.create(  name:       code_cell.name,
-                              var_type:   code_cell.type,
-                              code_file:  cf,
-                              line:       code_cell.line
+            Variable.create(  name:           code_cell.name,
+                              var_type:       code_cell.type,
+                              code_file:      cf,
+                              line:           code_cell.line,
+                              project:        project,
+                              code_namespace: get_namespace_from_cache( namespaces_cache, code_cell.namespace )
                               )
 
         elsif code_cell.class ==  MethodCell
@@ -157,14 +203,18 @@ end
                                 impl_end:             code_cell.impl_end_line,
                                 arguments:            code_cell.args,
                                 specified_class_name: code_cell.class_name,
-                                return_type:          code_cell.type
+                                return_type:          code_cell.type,
+                                project:              project,
+                                code_namespace:       get_namespace_from_cache( namespaces_cache, code_cell.namespace )
                                 )
           
         elsif code_cell.class == ClassCell && code_cell.type == "class"
-            newly_created = CodeClass.create(  name:         code_cell.name,
-                                               code_file:    cf,
-                                               line:         code_cell.line,
-                                               ancestors:    code_cell.ancestors
+            newly_created = CodeClass.create(  name:           code_cell.name,
+                                               code_file:      cf,
+                                               line:           code_cell.line,
+                                               ancestors:      code_cell.ancestors,
+                                               project:        project,
+                                               code_namespace: get_namespace_from_cache( namespaces_cache, code_cell.namespace )
                                                )
 
             classes_cache[ code_cell.name ] = newly_created
@@ -172,10 +222,12 @@ end
               
               if( item.class == VariableCell )
                 var = item
-                Variable.create(  name:       var.name,
-                                  var_type:   var.type,
-                                  code_file:  cf,
-                                  line:       var.line
+                Variable.create(  name:           var.name,
+                                  var_type:       var.type,
+                                  code_file:      cf,
+                                  line:           var.line,
+                                  project:        project,
+                                  code_namespace: get_namespace_from_cache( namespaces_cache, code_cell.namespace )
                                   )
             
               elsif( item.class == MethodCell )
@@ -187,7 +239,9 @@ end
                                     impl_end:             method.impl_end_line,
                                     arguments:            method.args,
                                     specified_class_name: newly_created.name,
-                                    return_type:          method.type
+                                    return_type:          method.type,
+                                    project:              project,
+                                    code_namespace:       get_namespace_from_cache( namespaces_cache, code_cell.namespace )
                                     )
               end # if Variable / Method
             end #children  
@@ -216,5 +270,5 @@ end
     puts
     print Cowsay::say("Done processing #{input}.")
     # q.pprint
-  end #task do
+  end #def main_process
 end #ns 

@@ -1,0 +1,24 @@
+<h1 class="clarity-h1">
+<%= fa_icon( "object-group" )%>All Namespaces</h1>
+<!--<div class="clarity-detail-box"></div>-->
+<!--<p id="notice"><%= notice %></p>-->
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Project</th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @code_namespaces.each do |name_space| %>
+      <tr>
+        <td><%= link_to name_space.name, name_space %></td>
+        <td><%= get_project_name( name_space.project_id) %></td>
+        <td><%= link_to 'Show', code_namespace_path(name_space), class: "btn btn-info btn-xs" %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

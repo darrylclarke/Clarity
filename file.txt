@@ -1,0 +1,7 @@
+crake project=/Users/darrylclarke/prj/source/code_small/hid
+crake project=/Users/darrylclarke/prj/source/code_small
+crake project=/Users/darrylclarke/prj/source/xenia/src/xenia
+crake project=/Users/darrylclarke/prj/source/xenia/src/xenia/app
+
+
+.

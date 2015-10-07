@@ -25,7 +25,7 @@ var drawShape = function( context, folderNameFontSize )
         this.left + labelOffset, this.top+this.height+folderNameFontSize);
 		
 	//context.fillText(""+this.num_code_files , this.left + 2, this.top + folderNameFontSize + 2 )
-	context.fillText(""+this.folder_id , this.left + 2, this.top + folderNameFontSize + 2 )
+	//context.fillText(""+this.folder_id , this.left + 2, this.top + folderNameFontSize + 2 )
 }
 
 var getColourBasedOnNumberOfFiles = function( numFiles )

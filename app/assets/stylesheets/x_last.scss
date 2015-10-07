@@ -1,3 +1,5 @@
+@import "site_variables";
+
 code a {
   color: #0f0;
 
@@ -48,4 +50,9 @@ code a.clarity-link-method {
 
 .project-link {
   padding-top:17px !important;
+}
+
+.namespace-image-text{
+  font-family: Consolas, "Courier New", monospace;
+  color : $clarity-theme-accent;
 }

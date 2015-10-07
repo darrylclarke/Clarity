@@ -1,0 +1,49 @@
+<h1 class="clarity-h1">
+<span class="namespace-image-text">{{}}</span> Namespace: <%= @code_namespace.name %></h1>
+
+<!--<p id="notice"><%= notice %></p>-->
+<div class="clarity-detail-box">
+  <p>
+    <strong>Project:</strong>
+    <%= get_project_name( @code_namespace.project_id) %>
+  </p>
+  <ul>
+    <% if @classes.any? %>
+    <li><%= @classes.count %> class(es)</li>
+    <%end%>
+    <% if @methods.any? %>
+    <li><%= @methods.count %> method(s)</li>
+    <%end%>
+    <% if @variables.any? %>
+    <li><%= @variables.count %> variable(s)</li>
+    <%end%>      
+  </ul>
+</div>
+
+<% if @classes.any? %>
+<h2 class="clarity-h2">Classes:</h2>
+<ul>
+  <% @classes.each do |ccclass| %>
+  <li><%= link_to ccclass.name, code_class_path( ccclass ) %></li>
+  <%end%>
+</ul>
+<%end%>
+
+<% if @methods.any? %>
+<h2 class="clarity-h2">Methods:</h2>
+<ul>
+  <% @methods.each do |mmmethod| %>
+  <li><%= link_to mmmethod.name, code_method_path( mmmethod ) %></li>
+  <%end%>
+</ul>
+<%end%>
+
+<% if @variables.any? %>
+<h2 class="clarity-h2">Variables:</h2>
+<ul>
+  <% @variables.each do |vvvar| %>
+  <li><%= vvvar.name %></li>
+  <!--<li><%#= link_to vvvar.name, variable_path( vvvar ) %></li>-->
+  <%end%>
+</ul>
+<%end%>      

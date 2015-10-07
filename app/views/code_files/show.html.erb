@@ -1,16 +1,52 @@
-<p id="notice"><%= notice %></p>
+<h1 class="clarity-h1"><span class="big-icon show-folder-heading-icon"><%= fa_icon("file-text-o")%></span> File: <%= @code_file.name %></h1>
 
-<h1>File:  <%= @code_file.name %></h1>
+<!--<p id="notice"><%= notice %></p>-->
+<div class="clarity-detail-box">
+  <p>
+    <strong>Project:</strong>
+    <%= @code_file.project.name %>
+  </p>
+  <p>
+    <strong>Path:</strong>
+    <%= @code_file.path %>
+  </p>
+  <ul>
+    <% if @code_file.code_classes.any? %>
+    <li><%= @code_file.code_classes.count %> class(es)</li>
+    <%end%>
+    <% if @code_file.code_methods.any? %>
+    <li><%= @code_file.code_methods.count %> method(s)</li>
+    <%end%>
+    <% if @code_file.variables.any? %>
+    <li><%= @code_file.variables.count %> variable(s)</li>
+    <%end%>      
+  </ul>
+</div>
 
-<p>
-  <strong>Path:</strong>
-  <%= @code_file.path %>
-</p>
+<% if @code_file.code_classes.any? %>
+<h2 class="clarity-h2">Classes:</h2>
+<ul>
+  <% @code_file.code_classes.each do |ccclass| %>
+  <li><%= link_to ccclass.name, code_class_path( ccclass ) %></li>
+  <%end%>
+</ul>
+<%end%>
 
-<p>
-  <strong>Project:</strong>
-  <%= @code_file.project.name %>
-</p>
+<% if @code_file.code_methods.any? %>
+<h2 class="clarity-h2">Methods:</h2>
+<ul>
+  <% @code_file.code_methods.each do |mmmethod| %>
+  <li><%= link_to mmmethod.name, code_method_path( mmmethod ) %></li>
+  <%end%>
+</ul>
+<%end%>
 
-<%#= link_to 'Edit', edit_code_file_path(@code_file) %> |
-<%#= link_to 'Back', code_files_path %>
+<% if @code_file.variables.any? %>
+<h2 class="clarity-h2">Variables:</h2>
+<ul>
+  <% @code_file.variables.each do |vvvar| %>
+  <li><%= vvvar.name %></li>
+  <!--<li><%#= link_to vvvar.name, variable_path( vvvar ) %></li>-->
+  <%end%>
+</ul>
+<%end%>      

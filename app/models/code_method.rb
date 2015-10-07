@@ -1,7 +1,9 @@
 class CodeMethod < ActiveRecord::Base
   belongs_to :code_file
   belongs_to :code_class
-
+  belongs_to :code_namespace
+  belongs_to :project 
+  
   has_many :impl_calls, dependent: :destroy, foreign_key: "caller_id"
   has_many :method_calls, through: :impl_calls,  source: :called
   
@@ -12,4 +14,13 @@ class CodeMethod < ActiveRecord::Base
   validates :code_file_id, presence: true
   validates :impl_start, numericality: {greater_than_or_equal_to: 1 }
   validates :impl_end,   numericality: {greater_than_or_equal_to: 1 }
+  
+  def self.by_project_and_namespace( project_id, namespace_id = nil )
+    if( namespace_id )
+      where(project_id: project_id, code_namespace_id: namespace_id )
+    else
+      where(project_id: project_id )
+    end
+  end
+  
 end

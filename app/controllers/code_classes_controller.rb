@@ -4,7 +4,17 @@ class CodeClassesController < ApplicationController
   # GET /code_classes
   # GET /code_classes.json
   def index
-    @code_classes = CodeClass.all
+    filter_project_id = params[:filter_project] || current_project_id
+    
+    # filter_namespace_id could remain nil, that is fine.  CodeClass.by_project_and_namespace can handle that.
+    filter_namespace_id   = nil
+    filter_namespace_name = params[:filter_namespace]
+    if filter_namespace_name
+      ns = CodeNamespace.find_by_name filter_namespace_name
+      filter_namespace_id = ns.id if ns
+    end
+      
+    @code_classes = CodeClass.by_project_and_namespace( filter_project_id, filter_namespace_id )
   end
 
   # GET /code_classes/1
