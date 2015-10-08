@@ -12,9 +12,9 @@ class Variable < ActiveRecord::Base
   
   def self.by_project_and_namespace( project_id, namespace_id = nil )
     if( namespace_id )
-      where(project_id: project_id, code_namespace_id: namespace_id )
+      where(project_id: project_id, code_namespace_id: namespace_id ).order(:name)
     else
-      where(project_id: project_id )
+      where(project_id: project_id ).order(:name)
     end
   end
   

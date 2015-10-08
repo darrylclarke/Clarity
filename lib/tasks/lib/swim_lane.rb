@@ -43,7 +43,6 @@ class SwimLane
 	end
 	
 	def as_hash( row_num, display_idx, cell_index_in_lane)
-		byebug
 		{
 			text:                dir_cell[ cell_index_in_lane ].name,
 			x_pos:               x_pos[ cell_index_in_lane ],

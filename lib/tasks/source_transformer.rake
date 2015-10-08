@@ -13,7 +13,6 @@ def create_folders( input_cell, folders_cache, project )
     total_lines = 0
     input_cell.children.each {|child| total_lines += child.num_lines }
     puts "total_lines #{total_lines}"
-byebug
      input_cell.active_record_object = Folder.create( 
                           name:           input_cell.name, 
                           path:           input_cell.full_name, 
@@ -248,13 +247,14 @@ def main_process( input )
               
               if( item.class == VariableCell )
                 var = item
-                Variable.create(  name:           var.name,
+                new_var = Variable.create(  name:           var.name,
                                   var_type:       var.type,
                                   code_file:      cf,
                                   line:           var.line,
                                   project:        project,
                                   code_namespace: get_namespace_from_cache( namespaces_cache, code_cell.namespace )
                                   )
+                newly_created.variables << new_var
             
               elsif( item.class == MethodCell )
                 method = item
@@ -278,11 +278,12 @@ end #extension
     puts "********************************************************************************************************"
     puts "*                                  Linking methods to classes                                          *"
     puts "********************************************************************************************************"
-    CodeMethod.all.where.not(specified_class_name:nil).each do |method|
+    CodeMethod.all.where(project: project).where.not(specified_class_name:nil).each do |method|
       method.code_class = classes_cache[ method.specified_class_name ]
       method.save
       print "."
     end
+    classes_cache.each {|key, value| puts "#{key} is #{value}" }
     end #if false
     
     # CodeMethod.all.where(specified_class_name:nil).each do |method|
@@ -295,7 +296,8 @@ end #extension
     # end
     
     puts
-    print Cowsay::say("Done processing #{input}.")
+    # print Cowsay::say("Done processing #{input}.")
+    puts("Done processing #{input}.")
     # q.pprint
   end #def main_process
 end #ns 

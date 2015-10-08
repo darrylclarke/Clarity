@@ -1,5 +1,6 @@
 
-<h1 class="clarity-h1"><%#= image_tag "f_method_icon.png", class: "element-icon" %> Project: <%= @project.name %></h1>
+<h1 class="clarity-h1"><%#= image_tag "f_method_icon.png", class: "element-icon" %>
+Project Folders: <%= @project.name %></h1>
 <div class="clarity-detail-box">
 <p>
   <strong>Root path:</strong>
@@ -10,7 +11,7 @@
 <p id="notice"><%= notice %></p>
 
 <div style="float:left;">
-<h2>Folders:</h2>
+<!--<h2>Folders:</h2>-->
 </div>
 <div style="float: right;">
 <%= link_to 'Back', projects_path, class: "btn btn-info" %>
@@ -32,7 +33,25 @@ $(document).ready(function(){
 
 </script>
 
-<canvas id="myCanvas" width="1400" height="800" style="border:1px solid #c3c3c3;">
+<form class="form-inline" id="tree-options-form">
+  <div class="form-group" id="tree-options-dropdown">
+    <label for="exampleInputName2">Display folders by:</label>
+    <select class="form-control" id="exampleInputName2">
+		<option value="BY_ABSOLUE_FILES"   >Number of source code files in each folder</option>
+		<option value="BY_PERCENTAGE_LINES">Percentage of code lines in each folder</option>
+		<option value="BY_PERCENTAGE_FILES">Percentage of source code files in each folder</option>
+  </select>
+
+  </div>
+  <div class="form-group" id="tree-options-show-number">
+    <label for="displayCounts">Display values</label>
+    <input type="checkbox" name="counts" value="1" class="form-control" id="displayCounts"></input>
+  </div>
+  <button type="submit" class="btn btn-default">Draw</button>
+</form>
+<br>
+<br>
+<canvas id="myCanvas" width="1400" height="800" > <!--style="border:1px solid #c3c3c3;"> -->
 Your browser does not support the HTML5 canvas tag.
 </canvas>
 

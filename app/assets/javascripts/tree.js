@@ -7,6 +7,29 @@ DEFAULT_COLOUR = "#d0e0eb";
 metrics = {};
 elements = [];
 displayMode = BY_ABSOLUE_FILES;
+includeNumberOnDisplay = false;
+
+var setDisplayMode = function( mode )
+{
+	switch( mode )
+	{
+		case "BY_PERCENTAGE_LINES" :
+			return BY_PERCENTAGE_LINES;
+			break;
+			
+		case "BY_PERCENTAGE_FILES" :
+			return BY_PERCENTAGE_FILES;
+			break;
+			
+		case "BY_ABSOLUE_FILES"    :
+			return BY_ABSOLUE_FILES;
+			break;
+			
+		default :
+			return BY_ABSOLUE_FILES
+			break;
+	}
+}
 
 var drawShape = function( context, folderNameFontSize, x_offset )
 {
@@ -51,8 +74,10 @@ var drawShape = function( context, folderNameFontSize, x_offset )
 		
 	//context.fillText(""+this.num_code_files , x_offset + this.left + 2, this.top + folderNameFontSize + 2 )
 	//context.fillText(""+this.folder_id , x_offset + this.left + 2, this.top + folderNameFontSize + 2 )
-	displayNum = Math.round(displayNum)
-	context.fillText(""+displayNum , x_offset + this.left + 2, this.top + folderNameFontSize + 2 )
+	if( includeNumberOnDisplay ) {
+		displayNum = Math.round(displayNum)
+		context.fillText(""+displayNum , x_offset + this.left + 2, this.top + folderNameFontSize + 2 )
+	}
 }
 
 var getColourBasedOnNumberOfFiles = function( numFiles )
@@ -231,6 +256,18 @@ var displayTree = function(elements, x_offset) {
 		});
 	}
 }
+
+$(document).ready(function(){
+	$(document).on('submit', '#tree-options-form', function(e){
+		e.preventDefault();
+		displayMode = setDisplayMode( $("#tree-options-dropdown option:selected").val() );
+		
+		includeNumberOnDisplay = $("#displayCounts").is(':checked');
+		console.log("draw " + displayMode + ", " + includeNumberOnDisplay  );
+		displayTree( elements, metrics["x_offset"] );
+	});
+
+});
 
 
     

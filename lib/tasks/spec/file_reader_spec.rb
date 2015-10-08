@@ -76,7 +76,7 @@ RSpec.describe FileReader do
 	
 	describe 'get lines a-->b' do
 		let(:f)     { f = FileReader.new }
-		let(:lines) { lines = f.get_lines_a_to_b(__FILE__, 1, 2 ) }
+		let(:lines) { lines = f.get_range_in_file(__FILE__, 1, 2 ) }
 		
 		it "reads the first two lines of this file" do
 			expect( lines.length ).to eq(2)

@@ -9,7 +9,8 @@ class ApplicationController < ActionController::Base
   helper_method :current_project_id
   
   def set_current_project( project )
-    session[:current_project_id] = project.id
+    value = (project==nil ? nil : project.id)
+    session[:current_project_id] = value
   end
     
 end

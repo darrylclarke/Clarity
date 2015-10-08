@@ -10,6 +10,7 @@ class CodeFilesController < ApplicationController
   # GET /code_files/1
   # GET /code_files/1.json
   def show
+    @display_all = (params[:display] == "all")
   end
 
   # GET /code_files/new

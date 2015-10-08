@@ -76,9 +76,15 @@ class FileReader
 		@lines
 	end
 
-	def get_lines_a_to_b( file_name, line_a, line_b )
+	#default arguments will get the entire file
+	def get_range_in_file( file_name, line_a=1, line_b=-1 )
 		@data_source = File.open( file_name, "r" )
-		initial_load_a_b( line_a, line_b )
+		initial_load_range( line_a, line_b )
+	end
+	
+	def get_entire_file( file_name )
+		@data_source = File.open( file_name, "r" )
+		initial_load
 	end
 	
 	def print_to_console
@@ -103,7 +109,8 @@ private
 		@lines
 	end
 	
-	def initial_load_a_b( line_a, line_b )
+	# default arguments will get the whole file
+	def initial_load_range( line_a=1, line_b=-1 )
 		@lines = []
 		line_number = 0
 		f = @data_source
@@ -111,7 +118,7 @@ private
 			line_number += 1
 			next unless line_number >= line_a
 			@lines << Line.new(line_number, line.chomp )
-			break if line_number >= line_b
+			break if line_b != -1 && line_number >= line_b
 		end
 		f.close if f.is_a? File
 		@lines

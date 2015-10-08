@@ -21,15 +21,19 @@
   
   <p>
     <strong>File:</strong>
-    <%= @code_method.code_file.name %>
+    <%= link_to @code_method.code_file.name, code_file_path( @code_method.code_file ) %>
     Lines <%= @code_method.impl_start %> to <%= @code_method.impl_end %>
   </p>
 </div>
 
 <h2 class="clarity-h2">Implementation:</h2>
 <pre><code><%= get_code_for_method( @code_method ) %></code></pre>
-<br>
-<pre>
+
+<%= link_to "Display entire file", code_file_path(@code_method.code_file) + "?display=all#code-file-show-page-code-block", 
+          class: "btn btn-info", 
+          style: "float: right; margin-right: 15px;" 
+          %>
+<!--<pre>
   <code>
    <% if @code_method.code_class %>
 
@@ -38,7 +42,7 @@ std::unique_ptr&lt;EmulatorWindow&gt; <%= link_to "EmulatorWindow", code_class_p
 <% end %>
   emulator_window->loop()-><%= link_to "PostSynchronous", code_method_path(12075), class: "clarity-link clarity-link-method" %>[&emulator_window]() {
   </code>
-</pre>
+</pre>-->
 
 <!--<%#= link_to 'Edit', edit_code_method_path(@code_method) %> |
 <%#= link_to 'Back', code_methods_path %>-->

@@ -17,6 +17,6 @@ Rails.application.routes.draw do
   
   resources :users
   
-  root "projects#index"
+  root "welcome#index"
   
 end
