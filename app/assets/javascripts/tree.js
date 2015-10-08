@@ -1,17 +1,42 @@
-//var c = document.getElementById("myCanvas");
-//var ctx = c.getContext("2d");
-//ctx.fillStyle = "#FF0FF0";
-//ctx.fillRect(0,0,150,75);
+// Globals
+BY_PERCENTAGE_LINES = 1;
+BY_PERCENTAGE_FILES = 2;
+BY_ABSOLUE_FILES = 3;
+DEFAULT_COLOUR = "#d0e0eb";
 
-// var drawtree = function() 
-// {
-    
-// }
+metrics = {};
+elements = [];
+displayMode = BY_ABSOLUE_FILES;
 
-// var tree
 var drawShape = function( context, folderNameFontSize, x_offset )
 {
 	context.fillStyle=this.colour;
+	var displayNum = 0;
+	
+	switch( displayMode )
+	{
+		case BY_PERCENTAGE_LINES :
+			context.fillStyle = getColourBasedOnPercentage( 
+				displayNum = this.num_lines/metrics["total_lines"]*100 
+				);
+			break;
+			
+		case BY_PERCENTAGE_FILES :
+			context.fillStyle = getColourBasedOnPercentage( 
+				displayNum = this.num_code_files/metrics["total_num_code_files"]*100 
+				);
+			break;
+			
+		case BY_ABSOLUE_FILES    :
+			context.fillStyle = getColourBasedOnNumberOfFiles( 
+				displayNum = this.num_code_files 
+				);
+			break;
+			
+		default :
+			context.fillStyle = DEFAULT_COLOUR;
+			break;
+	}
 	context.fillRect(x_offset+this.left, this.top, this.width, this.height);
 
     labelWidth = context.measureText(this.text).width;
@@ -26,34 +51,49 @@ var drawShape = function( context, folderNameFontSize, x_offset )
 		
 	//context.fillText(""+this.num_code_files , x_offset + this.left + 2, this.top + folderNameFontSize + 2 )
 	//context.fillText(""+this.folder_id , x_offset + this.left + 2, this.top + folderNameFontSize + 2 )
+	displayNum = Math.round(displayNum)
+	context.fillText(""+displayNum , x_offset + this.left + 2, this.top + folderNameFontSize + 2 )
 }
 
 var getColourBasedOnNumberOfFiles = function( numFiles )
 {
 	if( numFiles == 0 )
-		return "#d0e0eb"
+		return DEFAULT_COLOUR;
 	else if( numFiles > 0  && numFiles <= 5 )
-		return "#49708A"
+		return "#49708A";
 	else if( numFiles > 5  && numFiles <= 10 )
-		return "#55708A"
+		return "#55708A";
 	else if( numFiles > 10 && numFiles <= 15 )
-		return "#66708A"
+		return "#66708A";
 	else if( numFiles > 15 && numFiles <= 20 )
-		return "#77708A"
+		return "#77708A";
 	else if( numFiles > 20 && numFiles <= 30 )
-		return "#88708A"
+		return "#88708A";
 	else if( numFiles > 30 && numFiles <= 75 )
-		return "#BB3545"
+		return "#BB3545";
 	else //if( numFiles > 75 )
-		return "#FF0000"
+		return "#FF0000";
 }
 
-
-// $(document).ready(function(){
-// 	displayTree();
-// });
-
-elements = [];
+var getColourBasedOnPercentage = function( percentage )
+{
+	if( percentage == 0 )
+		return "#d0e0eb";
+	else if( percentage > 0  && percentage <= 5 )
+		return "#49708A";
+	else if( percentage > 5  && percentage <= 10 )
+		return "#55708A";
+	else if( percentage > 10 && percentage <= 15 )
+		return "#66708A";
+	else if( percentage > 15 && percentage <= 20 )
+		return "#77708A";
+	else if( percentage > 20 && percentage <= 30 )
+		return "#88708A";
+	else if( percentage > 30 && percentage <= 75 )
+		return "#BB3545";
+	else //if( percentage > 75 )
+		return "#FF0000";
+}
 
 var loadTree = function(data) {
 
@@ -67,39 +107,17 @@ var loadTree = function(data) {
 	{
 		elements.push({
 			text:           data[i].text,
-			colour:         getColourBasedOnNumberOfFiles( data[i].num_code_files), //'#05EFFF',
+			colour:         DEFAULT_COLOUR,
 			width:          data[i].width,
 			height:         data[i].height,
 			top:            data[i].y_pos*100,
 			left:           data[i].x_pos,
 			folder_id:		data[i].folder_id,
+			num_lines:		data[i].num_lines,
 			num_code_files: data[i].num_code_files	
 		})
 	}
-	projectId = data[0].project_id;
-	
-	// // Add element.
-	// elements.push({
-	// 	text: "hello",
-	// 	colour: '#05EFFF',
-	// 	width: 150,
-	// 	height: 100,
-	// 	top: 0,
-	// 	left: 0
-	// 	// ,
-	// 	// draw : drawShape
-	// });
-	// elements.push({
-	// 	text: "This is a long piece of text",
-	// 	colour: '#0707FF',
-	// 	width: 50,
-	// 	height: 40,
-	// 	top: 200,
-	// 	left: 200
-	// 	// ,
-	// 	// draw : drawShape
-	// });
-			
+	projectId = data[0].project_id;	
 	getLinks( projectId );
 }
 
@@ -123,7 +141,8 @@ var displayLinks = function( data )
 
 	context.clearRect(0, 0, elem.width, elem.height);
 
-	var x_offset = calculateXOffset( elements );
+	metrics = getMetrics( elements );
+	var x_offset = metrics["x_offset"]; 
 
 	for( var i = 0;  i < data.length;  i++ )
 	{
@@ -131,6 +150,7 @@ var displayLinks = function( data )
 		cell_to   = elements[data[i].to  ];
 		
 		drawLine( context, cell_from, cell_to, x_offset );
+		console.log("line");
 	}
 	displayTree( elements, x_offset );
 }
@@ -147,12 +167,17 @@ var drawLine = function( context, cell_from, cell_to, x_offset )
 	context.stroke();
 }
 
-var calculateXOffset = function( elements )
+var getMetrics = function( elements )
 {
 	var max_width = 0;
+	var total_lines = 0;
+	var total_num_code_files = 0;
+	
 	for( var i = 0;  i < elements.length; i++ )
 	{
 		var element = elements[i];
+		total_lines += element.num_lines;
+		total_num_code_files += element.num_code_files;
 		var max_x_element = element.left + element.width; 
 		if( max_x_element > max_width )
 		{
@@ -161,9 +186,16 @@ var calculateXOffset = function( elements )
 	}
 	if( max_width < 1100 )
 	{
-		return (1100 - max_width)/2;
+		metrics["x_offset"]= (1100 - max_width)/2;
 	}
-	return 0;
+	else
+	{
+		metrics["x_offset"]= 0;
+	}
+	metrics["total_lines"] = total_lines;
+	metrics["total_num_code_files"] = total_num_code_files;
+	
+	return metrics;
 }
 
 var displayTree = function(elements, x_offset) {
@@ -191,7 +223,7 @@ var displayTree = function(elements, x_offset) {
 			// Collision detection between clicked offset and element.
 			elements.forEach(function(element) {
 				if (y > element.top && y < element.top + element.height 
-					&& x > element.left && x < element.left + element.width) {
+					&& x > (x_offset + element.left) && x < (x_offset + element.left + element.width)) {
 					//alert('clicked element: ' + element.folder_id );
 					window.location.href = "/folders/"+ element.folder_id;
 				}

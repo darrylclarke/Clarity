@@ -12,6 +12,7 @@ def create_folders( input_cell, folders_cache, project )
     # add up the number of lines
     total_lines = 0
     input_cell.children.each {|child| total_lines += child.num_lines }
+    puts "total_lines #{total_lines}"
 byebug
      input_cell.active_record_object = Folder.create( 
                           name:           input_cell.name, 

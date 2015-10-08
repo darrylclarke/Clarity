@@ -31,7 +31,7 @@ $(document).ready( function() {
 		window.location.href = "/classes";
 	});
 	
-	$("#classes-index-namespace-search-form").on("submit", function(e){
+	$(document).on('submit', "#classes-index-namespace-search-form", function(e) {
 		e.preventDefault(e);
 		
 		//$("#code_class_code_namespace_id option:selected").attr("value")
