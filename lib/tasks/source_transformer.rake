@@ -9,14 +9,20 @@ CLEAN = false
 
 def create_folders( input_cell, folders_cache, project )
    if input_cell.class == DirectoryCell
+    # add up the number of lines
+    total_lines = 0
+    input_cell.children.each {|child| total_lines += child.num_lines }
+byebug
      input_cell.active_record_object = Folder.create( 
-                          name: input_cell.name, 
-                          path: input_cell.full_name, 
+                          name:           input_cell.name, 
+                          path:           input_cell.full_name, 
                           num_code_files: input_cell.num_code_files,
-                          project_id: project.id
-                          )
-    puts "Creating #{input_cell.name}"
+                          num_lines:      total_lines,
+                          project_id:     project.id
+                          ) 
+   puts "Creating #{input_cell.name}"
     folders_cache[input_cell.full_name] = input_cell.active_record_object
+    
   end
   input_cell.children.each do |child|
     create_folders( child, folders_cache, project )               
@@ -164,24 +170,42 @@ def main_process( input )
     q.set_tree( c )
     q.start
     # byebug
+
+    q.list.each do |cell|
+      next if cell.is_c_plus_plus_file
+        cf = CodeFile.create( name: cell.bare_file_name,
+                            path: cell.full_name,
+                            project: project,
+                            num_lines: 0,
+                            # folder: folders_cache[ folder ] 
+                            folder: cell.parent.active_record_object 
+                            ) 
+        cell.active_record_object = cf     
+    end 
     
+[".h", ".cc"].each do |extension|    
     q.list.each do |cell|
       # folder = cell.get_folder_full_path
       #   byebug
       # if folders_cache[folder] == nil
       #   folders_cache[ folder ] = Folder.create( name: cell.folder_name, path: folder ) # The root path
       # end
+      next unless cell.name.end_with? extension 
       
       cf = CodeFile.create( name: cell.bare_file_name,
                             path: cell.full_name,
                             project: project,
+                            num_lines: cell.num_lines,
                             # folder: folders_cache[ folder ] 
                             folder: cell.parent.active_record_object 
                             ) 
       cell.active_record_object = cf    
-                 
+      
+      # All files get added as above, but only C++ files go beyond this point to be processed
+      next if !cell.is_c_plus_plus_file 
+      
       sub_cell = cell.children[0]
-      # byebug
+      byebug if sub_cell == nil
       sub_cell.children.each do |code_cell|
         puts code_cell.class
         if code_cell.class == VariableCell
@@ -196,7 +220,7 @@ def main_process( input )
                               )
 
         elsif code_cell.class ==  MethodCell
-            CodeMethod.create(  name:                 code_cell.name,
+            m = CodeMethod.create(  name:                 code_cell.name,
                                 code_file:            cf,
                                 signature_line:       code_cell.line,
                                 impl_start:           code_cell.impl_start_line,
@@ -207,6 +231,7 @@ def main_process( input )
                                 project:              project,
                                 code_namespace:       get_namespace_from_cache( namespaces_cache, code_cell.namespace )
                                 )
+          puts "#{m.id} #{m.name}"
           
         elsif code_cell.class == ClassCell && code_cell.type == "class"
             newly_created = CodeClass.create(  name:           code_cell.name,
@@ -248,6 +273,7 @@ def main_process( input )
         end # elsif class
       end # main children do
     end # file do     
+end #extension
     puts "********************************************************************************************************"
     puts "*                                  Linking methods to classes                                          *"
     puts "********************************************************************************************************"

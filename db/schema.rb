@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151007165422) do
+ActiveRecord::Schema.define(version: 20151007223555) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -38,6 +38,7 @@ ActiveRecord::Schema.define(version: 20151007165422) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer  "folder_id"
+    t.integer  "num_lines"
   end
 
   add_index "code_files", ["folder_id"], name: "index_code_files_on_folder_id", using: :btree
@@ -103,6 +104,7 @@ ActiveRecord::Schema.define(version: 20151007165422) do
     t.datetime "created_at",     null: false
     t.datetime "updated_at",     null: false
     t.integer  "display_id"
+    t.integer  "num_lines"
   end
 
   add_index "display_boxes", ["folder_id"], name: "index_display_boxes_on_folder_id", using: :btree
@@ -114,6 +116,7 @@ ActiveRecord::Schema.define(version: 20151007165422) do
     t.datetime "updated_at",     null: false
     t.integer  "num_code_files"
     t.integer  "project_id"
+    t.integer  "num_lines"
   end
 
   add_index "folders", ["project_id"], name: "index_folders_on_project_id", using: :btree

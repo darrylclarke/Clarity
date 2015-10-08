@@ -9,23 +9,23 @@
 // }
 
 // var tree
-var drawShape = function( context, folderNameFontSize )
+var drawShape = function( context, folderNameFontSize, x_offset )
 {
 	context.fillStyle=this.colour;
-	context.fillRect(this.left, this.top, this.width, this.height);
+	context.fillRect(x_offset+this.left, this.top, this.width, this.height);
 
     labelWidth = context.measureText(this.text).width;
     labelOffset = (this.width - labelWidth)/2;
     context.fillStyle="#FFFFFF";
-	context.fillRect( this.left + labelOffset, this.top+this.height,
+	context.fillRect( x_offset + this.left + labelOffset, this.top+this.height,
 					  labelWidth, folderNameFontSize+2 );
 
     context.fillStyle="#000000"; 
     context.fillText(this.text,
-        this.left + labelOffset, this.top+this.height+folderNameFontSize);
+        x_offset + this.left + labelOffset, this.top+this.height+folderNameFontSize);
 		
-	//context.fillText(""+this.num_code_files , this.left + 2, this.top + folderNameFontSize + 2 )
-	//context.fillText(""+this.folder_id , this.left + 2, this.top + folderNameFontSize + 2 )
+	//context.fillText(""+this.num_code_files , x_offset + this.left + 2, this.top + folderNameFontSize + 2 )
+	//context.fillText(""+this.folder_id , x_offset + this.left + 2, this.top + folderNameFontSize + 2 )
 }
 
 var getColourBasedOnNumberOfFiles = function( numFiles )
@@ -123,16 +123,18 @@ var displayLinks = function( data )
 
 	context.clearRect(0, 0, elem.width, elem.height);
 
+	var x_offset = calculateXOffset( elements );
+
 	for( var i = 0;  i < data.length;  i++ )
 	{
 		cell_from = elements[data[i].from];
 		cell_to   = elements[data[i].to  ];
 		
-		drawLine( context, cell_from, cell_to );
+		drawLine( context, cell_from, cell_to, x_offset );
 	}
-	displayTree( elements );
+	displayTree( elements, x_offset );
 }
-var drawLine = function( context, cell_from, cell_to )
+var drawLine = function( context, cell_from, cell_to, x_offset )
 {
 	var x1 = cell_from.left + cell_from.width/2;
 	var y1 = cell_from.top  + cell_from.height/2;
@@ -140,12 +142,31 @@ var drawLine = function( context, cell_from, cell_to )
 	var x2 = cell_to.left + cell_to.width/2;
 	var y2 = cell_to.top  + cell_to.height/2;
 
-	context.moveTo(x1,y1);
-	context.lineTo(x2,y2);
+	context.moveTo(x_offset + x1,y1);
+	context.lineTo(x_offset + x2,y2);
 	context.stroke();
 }
 
-var displayTree = function(elements) {
+var calculateXOffset = function( elements )
+{
+	var max_width = 0;
+	for( var i = 0;  i < elements.length; i++ )
+	{
+		var element = elements[i];
+		var max_x_element = element.left + element.width; 
+		if( max_x_element > max_width )
+		{
+			max_width = max_x_element;
+		}
+	}
+	if( max_width < 1100 )
+	{
+		return (1100 - max_width)/2;
+	}
+	return 0;
+}
+
+var displayTree = function(elements, x_offset) {
 	// Add event listener for `click` events.
 	var elem = document.getElementById('myCanvas');
 	if( elem )
@@ -157,11 +178,10 @@ var displayTree = function(elements) {
 		var folderNameFontSize = 14;
 		context.font = "" + folderNameFontSize + "px Arial";
 		
-		
 		elements.forEach(function(e){
 			e.draw = drawShape; 
 			e.context = context;
-			e.draw( context, folderNameFontSize );
+			e.draw( context, folderNameFontSize, x_offset );
 		});
 		
 		elem.addEventListener('click', function(event) {

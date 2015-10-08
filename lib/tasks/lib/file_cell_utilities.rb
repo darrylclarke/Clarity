@@ -36,12 +36,12 @@ class FileCellFactory
 					end
 				end
 				
-				if file_name.end_with?( ".h" ) || file_name.end_with?( ".cc" )
+				#if file_name.end_with?( ".h" ) || file_name.end_with?( ".cc" )
 					@@count += 1
 					return FileCell.new( file_name )
-				else
-					return SpecialFileCell.new( file_name, file_name )
-				end
+				#else
+				#	return SpecialFileCell.new( file_name, file_name )
+				#end
 			elsif file_type.include?("pdf")
 				return SpecialFileCell.new( file_name, "pdf" )
 			end
@@ -95,6 +95,7 @@ private
 			lines = fr.load( File.open( cell.full_name, "r" ), :debug )
 			f = FileParser.new( "", lines )
 			cell.children << f.process
+			cell.num_lines = fr.highest_line_number
 			#FileScopeCell.dump( cell.children[0] )
 			return
 		end

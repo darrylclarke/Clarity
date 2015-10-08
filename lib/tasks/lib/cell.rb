@@ -4,6 +4,7 @@ class Cell
 	def initialize
 		@children = []
 		@parent = nil
+		@name = nil
 	end
 	
 	attr_accessor :children, :parent
@@ -11,6 +12,18 @@ class Cell
 	def dump
 	end
 	
+	def name
+		nil
+	end
+	
+	def is_c_plus_plus_file
+      return false if !name
+	  name.end_with?( ".h" )   || 
+	  name.end_with?( ".cc" )  || 
+	  name.end_with?( ".cpp" ) || 
+	  name.end_with?( ".C" )   || 
+	  name.end_with?( ".c" )
+	end
 end
 
 ########################################################################
@@ -21,10 +34,11 @@ class FileCellBase < Cell
 	def initialize( full_name )
 		@full_name = full_name
 		@active_record_object = nil
+		@num_lines = 0
 		super()
 	end
 	
-	attr_accessor :full_name, :active_record_object
+	attr_accessor :full_name, :active_record_object, :num_lines
 	
 	def data
 	end
@@ -135,14 +149,6 @@ class FileCell < FileCellBase
 	def dump
 		super
 		puts summary
-	end
-	
-	def is_c_plus_plus
-	  file_name.end_with?( ".h" ) 
-		|| file_name.end_with?( ".cc" ) 
-		|| file_name.end_with?( ".cpp" ) 
-		|| file_name.end_with?( ".C" )
-		|| file_name.end_with?( ".c" )
 	end
 end
 

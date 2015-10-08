@@ -59,10 +59,14 @@ class FileReader
 
 	def initialize
 		@lines = []
+		@highest_line_number = 0
 	end
+	
+	attr_accessor :highest_line_number
 	
 	def load( data_source, debug = false )
 		@data_source = data_source
+		@highest_line_number = 0
 		initial_load
 		join_lines
 		strip_strings_and_comments
@@ -72,7 +76,7 @@ class FileReader
 		@lines
 	end
 
-		def get_lines_a_to_b( file_name, line_a, line_b )
+	def get_lines_a_to_b( file_name, line_a, line_b )
 		@data_source = File.open( file_name, "r" )
 		initial_load_a_b( line_a, line_b )
 	end
@@ -95,6 +99,7 @@ private
 			end
 		end
 		f.close if f.is_a? File
+		@highest_line_number = line_number
 		@lines
 	end
 	

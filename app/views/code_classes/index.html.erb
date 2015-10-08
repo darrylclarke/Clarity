@@ -10,8 +10,8 @@
 			<%= f.collection_select :code_namespace_id, CodeNamespace.all, :id, :name, {include_blank: true}, style: "margin-bottom:10px;", class: "form-control" %> 
     </div>
     <div class="col-md-4">	
-		  <%= f.submit "Filter", class: "btn btn-primary"		 %>
-      <button id="filter-by-namespace-reset" class="btn btn-primary">Reset</button>
+		  <%= f.submit "Filter", style: "margin-top:28px;", class: "btn btn-primary"		 %>
+      <button id="filter-by-namespace-reset" style="margin-top:28px;" class="btn btn-primary">Reset</button>
 		</div>
 </div>
 <% end %>    

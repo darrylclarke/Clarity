@@ -43,6 +43,7 @@ class SwimLane
 	end
 	
 	def as_hash( row_num, display_idx, cell_index_in_lane)
+		byebug
 		{
 			text:                dir_cell[ cell_index_in_lane ].name,
 			x_pos:               x_pos[ cell_index_in_lane ],
@@ -52,6 +53,7 @@ class SwimLane
 			folder_id:           dir_cell[ cell_index_in_lane ].active_record_object.id,
 			num_code_files:      dir_cell[ cell_index_in_lane ].num_code_files,
 			display_id:          display_idx,
+			num_lines:			 dir_cell[ cell_index_in_lane ].num_lines,
 			notes_flags:         0
 		}
 	end

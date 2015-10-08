@@ -60,7 +60,7 @@ class DetailsFileFinder < DetailsTreeTraverser
 	
 	def do_file_action( cell )
 	# byebug
-		if cell.class == FileCell
+		if cell.class == FileCell || cell.class == SpecialFileCell
 			puts "#{cell.summary}"
 			@list << cell
 		end
